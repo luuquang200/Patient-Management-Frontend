@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Box, Paper, InputBase, Divider, IconButton, TablePagination } from '@mui/material';
 import { searchPatients, deactivatePatient } from '../services/api';
 import SearchIcon from '@mui/icons-material/Search';
+import { format } from 'date-fns'; // Import format function from date-fns
 
 const PatientList = () => {
     const [patients, setPatients] = useState([]);
@@ -71,6 +72,10 @@ const PatientList = () => {
                         <TableCell>Last Name</TableCell>
                         <TableCell>Gender</TableCell>
                         <TableCell>Date of Birth</TableCell>
+                        <TableCell>Contact Info</TableCell>
+                        <TableCell>Primary Address</TableCell>
+                        <TableCell>Secondary Address</TableCell>
+                        <TableCell>Active Status</TableCell>
                         <TableCell>Actions</TableCell>
                     </TableRow>
                 </TableHead>
@@ -80,7 +85,27 @@ const PatientList = () => {
                             <TableCell>{patient.firstName}</TableCell>
                             <TableCell>{patient.lastName}</TableCell>
                             <TableCell>{patient.gender}</TableCell>
-                            <TableCell>{patient.dateOfBirth}</TableCell>
+                            <TableCell>{format(new Date(patient.dateOfBirth), 'MM/dd/yyyy')}</TableCell> {/* Format date of birth */}
+                            <TableCell>
+                                {patient.contactInfos.map((info, index) => (
+                                    <div key={index}>{info.type}: {info.value}</div>
+                                ))}
+                            </TableCell>
+                            <TableCell>
+                                {patient.primaryAddress && (
+                                    <div>
+                                        {patient.primaryAddress.street}, {patient.primaryAddress.city}, {patient.primaryAddress.state}, {patient.primaryAddress.zipCode}, {patient.primaryAddress.country}
+                                    </div>
+                                )}
+                            </TableCell>
+                            <TableCell>
+                                {patient.secondaryAddress ? (
+                                    <div>
+                                        {patient.secondaryAddress.street}, {patient.secondaryAddress.city}, {patient.secondaryAddress.state}, {patient.secondaryAddress.zipCode}, {patient.secondaryAddress.country}
+                                    </div>
+                                ) : 'N/A'}
+                            </TableCell>
+                            <TableCell>{patient.isActive ? 'Active' : `Inactive (${patient.inactiveReason || 'N/A'})`}</TableCell>
                             <TableCell>
                                 <Button
                                     variant="contained"
