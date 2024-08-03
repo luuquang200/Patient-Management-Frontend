@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Box, Paper, InputBase, Divider, IconButton, TablePagination } from '@mui/material';
+import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Box, Paper, InputBase, Divider, IconButton, TablePagination, Alert, AlertTitle } from '@mui/material';
 import { searchPatients, deactivatePatient } from '../services/api';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { format } from 'date-fns'; // Import format function from date-fns
+import { format } from 'date-fns';
 
 const PatientList = () => {
     const [patients, setPatients] = useState([]);
@@ -69,84 +69,92 @@ const PatientList = () => {
                     Add Patient
                 </Button>
             </Box>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>First Name</TableCell>
-                        <TableCell>Last Name</TableCell>
-                        <TableCell>Gender</TableCell>
-                        <TableCell>Date of Birth</TableCell>
-                        <TableCell>Contact Info</TableCell>
-                        <TableCell>Primary Address</TableCell>
-                        <TableCell>Secondary Address</TableCell>
-                        <TableCell>Active Status</TableCell>
-                        <TableCell>Actions</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {patients.map((patient) => (
-                        <TableRow key={patient.id}>
-                            <TableCell>{patient.firstName}</TableCell>
-                            <TableCell>{patient.lastName}</TableCell>
-                            <TableCell>{patient.gender}</TableCell>
-                            <TableCell>{format(new Date(patient.dateOfBirth), 'MM/dd/yyyy')}</TableCell> {/* Format date of birth */}
-                            <TableCell>
-                                {patient.contactInfos.map((info, index) => (
-                                    <div key={index}>{info.type}: {info.value}</div>
-                                ))}
-                            </TableCell>
-                            <TableCell>
-                                {patient.primaryAddress && (
-                                    <div>
-                                        {patient.primaryAddress.street}, {patient.primaryAddress.city}, {patient.primaryAddress.state}, {patient.primaryAddress.zipCode}, {patient.primaryAddress.country}
-                                    </div>
-                                )}
-                            </TableCell>
-                            <TableCell>
-                                {patient.secondaryAddress ? (
-                                    <div>
-                                        {patient.secondaryAddress.street}, {patient.secondaryAddress.city}, {patient.secondaryAddress.state}, {patient.secondaryAddress.zipCode}, {patient.secondaryAddress.country}
-                                    </div>
-                                ) : 'N/A'}
-                            </TableCell>
-                            <TableCell>
-                                {patient.isActive ? (
-                                    <CheckCircleIcon color="success" />
-                                ) : (
-                                    <CancelIcon color="error" />
-                                )}
-                            </TableCell>
-                            <TableCell>
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                    <IconButton
-                                        color="primary"
-                                        component={Link}
-                                        to={`/update/${patient.id}`}
-                                        sx={{ mr: 1 }}
-                                    >
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton
-                                        color="secondary"
-                                        onClick={() => handleDeactivate(patient.id)}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Box>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            <TablePagination
-                component="div"
-                count={totalPatients}
-                page={page - 1}
-                onPageChange={handlePageChange}
-                rowsPerPage={pageSize}
-                onRowsPerPageChange={handlePageSizeChange}
-                rowsPerPageOptions={[5, 10, 25]}
-            />
+            {patients.length === 0 ? (
+                <Alert severity="warning">
+                    <Typography>No patients were found matching your search criteria.</Typography>
+                </Alert>
+            ) : (
+                <>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>First Name</TableCell>
+                                <TableCell>Last Name</TableCell>
+                                <TableCell>Gender</TableCell>
+                                <TableCell>Date of Birth</TableCell>
+                                <TableCell>Contact Info</TableCell>
+                                <TableCell>Primary Address</TableCell>
+                                <TableCell>Secondary Address</TableCell>
+                                <TableCell>Active Status</TableCell>
+                                <TableCell>Actions</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {patients.map((patient) => (
+                                <TableRow key={patient.id}>
+                                    <TableCell>{patient.firstName}</TableCell>
+                                    <TableCell>{patient.lastName}</TableCell>
+                                    <TableCell>{patient.gender}</TableCell>
+                                    <TableCell>{format(new Date(patient.dateOfBirth), 'MM/dd/yyyy')}</TableCell>
+                                    <TableCell>
+                                        {patient.contactInfos.map((info, index) => (
+                                            <div key={index}>{info.type}: {info.value}</div>
+                                        ))}
+                                    </TableCell>
+                                    <TableCell>
+                                        {patient.primaryAddress && (
+                                            <div>
+                                                {patient.primaryAddress.street}, {patient.primaryAddress.city}, {patient.primaryAddress.state}, {patient.primaryAddress.zipCode}, {patient.primaryAddress.country}
+                                            </div>
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {patient.secondaryAddress ? (
+                                            <div>
+                                                {patient.secondaryAddress.street}, {patient.secondaryAddress.city}, {patient.secondaryAddress.state}, {patient.secondaryAddress.zipCode}, {patient.secondaryAddress.country}
+                                            </div>
+                                        ) : 'N/A'}
+                                    </TableCell>
+                                    <TableCell>
+                                        {patient.isActive ? (
+                                            <CheckCircleIcon color="success" />
+                                        ) : (
+                                            <CancelIcon color="error" />
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                            <IconButton
+                                                color="primary"
+                                                component={Link}
+                                                to={`/update/${patient.id}`}
+                                                sx={{ mr: 1 }}
+                                            >
+                                                <EditIcon />
+                                            </IconButton>
+                                            <IconButton
+                                                color="secondary"
+                                                onClick={() => handleDeactivate(patient.id)}
+                                            >
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </Box>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    <TablePagination
+                        component="div"
+                        count={totalPatients}
+                        page={page - 1}
+                        onPageChange={handlePageChange}
+                        rowsPerPage={pageSize}
+                        onRowsPerPageChange={handlePageSizeChange}
+                        rowsPerPageOptions={[5, 10, 25]}
+                    />
+                </>
+            )}
         </Container>
     );
 };
