@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Box, Paper, InputBase, Divider, IconButton, TablePagination } from '@mui/material';
 import { searchPatients, deactivatePatient } from '../services/api';
 import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { format } from 'date-fns'; // Import format function from date-fns
 
 const PatientList = () => {
@@ -105,24 +109,30 @@ const PatientList = () => {
                                     </div>
                                 ) : 'N/A'}
                             </TableCell>
-                            <TableCell>{patient.isActive ? 'Active' : `Inactive (${patient.inactiveReason || 'N/A'})`}</TableCell>
                             <TableCell>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    component={Link}
-                                    to={`/update/${patient.id}`}
-                                    sx={{ mr: 1 }}
-                                >
-                                    Update
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={() => handleDeactivate(patient.id)}
-                                >
-                                    Deactivate
-                                </Button>
+                                {patient.isActive ? (
+                                    <CheckCircleIcon color="success" />
+                                ) : (
+                                    <CancelIcon color="error" />
+                                )}
+                            </TableCell>
+                            <TableCell>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <IconButton
+                                        color="primary"
+                                        component={Link}
+                                        to={`/update/${patient.id}`}
+                                        sx={{ mr: 1 }}
+                                    >
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton
+                                        color="secondary"
+                                        onClick={() => handleDeactivate(patient.id)}
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Box>
                             </TableCell>
                         </TableRow>
                     ))}
