@@ -1,0 +1,40 @@
+name: Deploy Patient Management App to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - dev
+
+env:
+  GCP_PROJECT: ${{ secrets.GCLOUD_PROJECT_ID }}
+  WORKING_DIRECTORY: ./
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCLOUD_SA_KEY }}
+
+      - name: Configure gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCLOUD_SA_KEY }}
+
+      - name: Build and push Docker image
+        run: |
+          cd ${{ env.WORKING_DIRECTORY }}
+          IMAGE_NAME=gcr.io/${{ env.GCP_PROJECT }}/patient-management
+          gcloud builds submit --tag $IMAGE_NAME .
+
+      - name: Deploy to Cloud Run
+        run: |
+          IMAGE_NAME=gcr.io/${{ env.GCP_PROJECT }}/patient-management
+          gcloud run deploy patient-management --image $IMAGE_NAME --region us-central1 --platform managed --allow-unauthenticated
