@@ -4,6 +4,8 @@ import { Container, TextField, Button, Box, Typography, MenuItem, IconButton, Pa
 import { getPatientDetails, updatePatient } from '../services/api';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UpdatePatient = () => {
     const navigate = useNavigate();
@@ -23,11 +25,9 @@ const UpdatePatient = () => {
             const response = await getPatientDetails(id);
             if (response.data.success) {
                 const patientData = response.data.data;
-                // Check if secondaryAddress is null and provide default values if it is
                 if (!patientData.secondaryAddress) {
                     patientData.secondaryAddress = { street: '', city: '', state: '', zipCode: '', country: '' };
                 }
-                // Convert dateOfBirth to yyyy-MM-dd format
                 if (patientData.dateOfBirth) {
                     patientData.dateOfBirth = new Date(patientData.dateOfBirth).toISOString().split('T')[0];
                 }
@@ -36,7 +36,6 @@ const UpdatePatient = () => {
         };
         fetchPatientDetails();
     }, [id]);
-    
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -71,8 +70,19 @@ const UpdatePatient = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await updatePatient(patient);
-        navigate('/patients');
+        try {
+            const response = await updatePatient(patient);
+            if (response.data.success) {
+                toast.success("Update successful");
+                setTimeout(() => {
+                    navigate('/patients');
+                }, 1000);
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            toast.error("An error occurred while updating the patient");
+        }
     };
 
     return (
@@ -84,7 +94,7 @@ const UpdatePatient = () => {
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left" >
+                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{ fontWeight: 'bold' }}>
                                 Demographics
                             </Typography>
                         </Grid>
@@ -136,7 +146,7 @@ const UpdatePatient = () => {
                             />
                         </Grid>
                         <Grid item xs={12} sx={{ mt: 2 }}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left"  sx={{mb: 2}}>
+                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{ fontWeight: 'bold' }}>
                                 Contact Information
                             </Typography>
                             {patient.contactInfos.map((info, index) => (
@@ -167,7 +177,7 @@ const UpdatePatient = () => {
                             </Button>
                         </Grid>
                         <Grid item xs={12}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left" >
+                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{ fontWeight: 'bold' }}>
                                 Primary Address
                             </Typography>
                         </Grid>
@@ -222,7 +232,7 @@ const UpdatePatient = () => {
                             />
                         </Grid>
                         <Grid item xs={12} sx={{ mt: 2 }}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left" >
+                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{ fontWeight: 'bold' }}>
                                 Secondary Address
                             </Typography>
                         </Grid>
@@ -230,7 +240,7 @@ const UpdatePatient = () => {
                             <TextField
                                 label="Street"
                                 name="secondaryAddress.street"
-                                value={patient.secondaryAddress.street}
+                                value={patient.secondaryAddress.street || ''}
                                 onChange={handleInputChange}
                                 fullWidth
                             />
@@ -239,7 +249,7 @@ const UpdatePatient = () => {
                             <TextField
                                 label="City"
                                 name="secondaryAddress.city"
-                                value={patient.secondaryAddress.city}
+                                value={patient.secondaryAddress.city || ''}
                                 onChange={handleInputChange}
                                 fullWidth
                             />
@@ -248,7 +258,7 @@ const UpdatePatient = () => {
                             <TextField
                                 label="State"
                                 name="secondaryAddress.state"
-                                value={patient.secondaryAddress.state}
+                                value={patient.secondaryAddress.state || ''}
                                 onChange={handleInputChange}
                                 fullWidth
                             />
@@ -257,7 +267,7 @@ const UpdatePatient = () => {
                             <TextField
                                 label="Zip Code"
                                 name="secondaryAddress.zipCode"
-                                value={patient.secondaryAddress.zipCode}
+                                value={patient.secondaryAddress.zipCode || ''}
                                 onChange={handleInputChange}
                                 fullWidth
                             />
@@ -266,19 +276,20 @@ const UpdatePatient = () => {
                             <TextField
                                 label="Country"
                                 name="secondaryAddress.country"
-                                value={patient.secondaryAddress.country}
+                                value={patient.secondaryAddress.country || ''}
                                 onChange={handleInputChange}
                                 fullWidth
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ fontSize: 18, mt: 2 }}>
+                            <Button type="submit" variant="contained" color="primary" fullWidth>
                                 Update Patient
                             </Button>
                         </Grid>
                     </Grid>
                 </form>
             </Paper>
+            <ToastContainer />
         </Container>
     );
 };

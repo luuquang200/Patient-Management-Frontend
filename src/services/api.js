@@ -6,7 +6,14 @@ export const getPatients = () => axios.get(`${API_BASE_URL}/patients`);
 export const createPatient = (patientData) => axios.post(`${API_BASE_URL}/patients`, patientData);
 export const getPatientById = (id) => axios.get(`${API_BASE_URL}/patients/get/${id}`);
 export const addPatient = (patientData) => axios.post(`${API_BASE_URL}/patients/create`, patientData);
-export const updatePatient = (patientData) => axios.put(`${API_BASE_URL}/patients/update`, patientData);
+// export const updatePatient = (patientData) => axios.put(`${API_BASE_URL}/patients/update`, patientData);
+export const updatePatient = (patientData) => {
+    return axios.put(`${API_BASE_URL}/patients/update`, patientData, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+};
 export const deactivatePatient = (id, reason) => axios.patch(`${API_BASE_URL}/patients/${id}/deactivate`, {
     reason
 });

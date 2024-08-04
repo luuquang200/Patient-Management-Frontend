@@ -4,6 +4,8 @@ import { Container, TextField, Button, Box, Typography, MenuItem, IconButton, Pa
 import { addPatient } from '../services/api';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddPatient = () => {
     const navigate = useNavigate();
@@ -50,10 +52,21 @@ const AddPatient = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await addPatient(patient);
-        navigate('/patients');
+        try {
+            const response = await addPatient(patient);
+            if (response.data.success) {
+                toast.success("Patient added successfully");
+                setTimeout(() => {
+                    navigate('/patients');
+                }, 1000);
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            toast.error("An error occurred while adding the patient");
+        }
     };
-
+    
     return (
         <Container>
             <Typography variant="h4" component="h1" gutterBottom>
