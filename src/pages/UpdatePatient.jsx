@@ -94,7 +94,7 @@ const UpdatePatient = () => {
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{ fontWeight: 'bold' }}>
+                            <Typography variant="h6" component="h2" gutterBottom align="left" >
                                 Demographics
                             </Typography>
                         </Grid>
@@ -146,7 +146,7 @@ const UpdatePatient = () => {
                             />
                         </Grid>
                         <Grid item xs={12} sx={{ mt: 2 }}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{ fontWeight: 'bold' }}>
+                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{mb: 2}}>
                                 Contact Information
                             </Typography>
                             {patient.contactInfos.map((info, index) => (
@@ -177,7 +177,7 @@ const UpdatePatient = () => {
                             </Button>
                         </Grid>
                         <Grid item xs={12}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{ fontWeight: 'bold' }}>
+                            <Typography variant="h6" component="h2" gutterBottom align="left" >
                                 Primary Address
                             </Typography>
                         </Grid>
@@ -232,7 +232,7 @@ const UpdatePatient = () => {
                             />
                         </Grid>
                         <Grid item xs={12} sx={{ mt: 2 }}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{ fontWeight: 'bold' }}>
+                            <Typography variant="h6" component="h2" gutterBottom align="left" >
                                 Secondary Address
                             </Typography>
                         </Grid>
@@ -282,7 +282,7 @@ const UpdatePatient = () => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <Button type="submit" variant="contained" color="primary" fullWidth>
+                            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ fontSize: 18, mt:2 }}>
                                 Update Patient
                             </Button>
                         </Grid>

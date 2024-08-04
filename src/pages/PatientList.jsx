@@ -113,7 +113,13 @@ const PatientList = () => {
                                     <TableCell>
                                         {patient.secondaryAddress ? (
                                             <div>
-                                                {patient.secondaryAddress.street}, {patient.secondaryAddress.city}, {patient.secondaryAddress.state}, {patient.secondaryAddress.zipCode}, {patient.secondaryAddress.country}
+                                                {[
+                                                    patient.secondaryAddress.street,
+                                                    patient.secondaryAddress.city,
+                                                    patient.secondaryAddress.state,
+                                                    patient.secondaryAddress.zipCode,
+                                                    patient.secondaryAddress.country
+                                                ].filter(Boolean).join(', ') || 'N/A'}
                                             </div>
                                         ) : 'N/A'}
                                     </TableCell>
