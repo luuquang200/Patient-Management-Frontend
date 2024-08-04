@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Container, TextField, Button, Box, Typography, MenuItem, IconButton, Paper, Grid, Divider } from '@mui/material';
-import { addPatient } from '../services/api';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Container, TextField, Button, Box, Typography, MenuItem, IconButton, Paper, Grid } from '@mui/material';
+import { getPatientDetails, updatePatient } from '../services/api';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const AddPatientForm = () => {
+const UpdatePatientForm = () => {
     const navigate = useNavigate();
+    const { id } = useParams();
     const [patient, setPatient] = useState({
         firstName: '',
         lastName: '',
@@ -16,6 +17,16 @@ const AddPatientForm = () => {
         primaryAddress: { street: '', city: '', state: '', zipCode: '', country: '' },
         secondaryAddress: { street: '', city: '', state: '', zipCode: '', country: '' }
     });
+
+    useEffect(() => {
+        const fetchPatientDetails = async () => {
+            const response = await getPatientDetails(id);
+            if (response.data.success) {
+                setPatient(response.data.data);
+            }
+        };
+        fetchPatientDetails();
+    }, [id]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -50,20 +61,20 @@ const AddPatientForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await addPatient(patient);
+        await updatePatient(id, patient);
         navigate('/patients');
     };
 
     return (
         <Container>
             <Typography variant="h4" component="h1" gutterBottom>
-                Add New Patient
+                Update Patient
             </Typography>
             <Paper sx={{ p: 4, borderRadius: 2, boxShadow: 5 }}>
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left">
+                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{ fontWeight: 'bold' }}>
                                 Demographics
                             </Typography>
                         </Grid>
@@ -114,8 +125,8 @@ const AddPatientForm = () => {
                                 required
                             />
                         </Grid>
-                        <Grid item xs={12} sx={{ mt: 2 }}> 
-                            <Typography variant="h6" component="h2" gutterBottom align="left">
+                        <Grid item xs={12} sx={{ mt: 2 }}>
+                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{ fontWeight: 'bold' }}>
                                 Contact Information
                             </Typography>
                             {patient.contactInfos.map((info, index) => (
@@ -141,12 +152,12 @@ const AddPatientForm = () => {
                                     </IconButton>
                                 </Box>
                             ))}
-                            <Button variant="contained"  onClick={addContactInfo} startIcon={<AddIcon />} sx={{ mt: 1, alignSelf: 'flex-start' }}>
+                            <Button variant="contained" onClick={addContactInfo} startIcon={<AddIcon />} sx={{ mt: 1, alignSelf: 'flex-start' }}>
                                 Add Contact Info
                             </Button>
                         </Grid>
-                        <Grid item xs={12}> 
-                            <Typography variant="h6" component="h2" gutterBottom align="left">
+                        <Grid item xs={12}>
+                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{ fontWeight: 'bold' }}>
                                 Primary Address
                             </Typography>
                         </Grid>
@@ -201,7 +212,7 @@ const AddPatientForm = () => {
                             />
                         </Grid>
                         <Grid item xs={12} sx={{ mt: 2 }}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left">
+                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{ fontWeight: 'bold' }}>
                                 Secondary Address
                             </Typography>
                         </Grid>
@@ -251,8 +262,8 @@ const AddPatientForm = () => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ fontSize: 18, mt:2 }}>
-                                Add Patient
+                            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ fontSize: 18, mt: 2 }}>
+                                Update Patient
                             </Button>
                         </Grid>
                     </Grid>
@@ -262,4 +273,4 @@ const AddPatientForm = () => {
     );
 };
 
-export default AddPatientForm;
+export default UpdatePatientForm;

@@ -7,6 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import PersonOffIcon from '@mui/icons-material/PersonOff';
 import { format } from 'date-fns';
 
 const PatientList = () => {
@@ -128,8 +129,7 @@ const PatientList = () => {
                                             <IconButton
                                                 color="primary"
                                                 component={Link}
-                                                // to={`/update/${patient.id}`}
-                                                to={`/add`}
+                                                to={`/update/${patient.id}`}
                                                 sx={{ mr: 1 }}
                                             >
                                                 <EditIcon />
@@ -138,7 +138,8 @@ const PatientList = () => {
                                                 color="secondary"
                                                 onClick={() => handleDeactivate(patient.id)}
                                             >
-                                                <DeleteIcon />
+                                                {/* <DeleteIcon /> */}
+                                                <PersonOffIcon />
                                             </IconButton>
                                         </Box>
                                     </TableCell>
