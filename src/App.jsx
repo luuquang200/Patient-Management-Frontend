@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { indigo, pink } from '@mui/material/colors'; // Import color modules
+import { indigo, pink } from '@mui/material/colors'; 
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { Container, CssBaseline } from '@mui/material';
@@ -9,6 +9,8 @@ import Home from './pages/Home';
 import PatientList from './pages/PatientList';
 import AddPatient from './pages/AddPatient';
 import UpdatePatient from './pages/UpdatePatient';
+import AddPatientForm from './components/AddPatientForm';
+
 import './App.css'; 
 
 const theme = createTheme({
@@ -29,6 +31,7 @@ const App = () => {
                         <Route path="/" element={<Home />} />
                         <Route path="/patients" element={<PatientList />} />
                         <Route path="/add" element={<AddPatient />} />
+                        <Route path="/add-patient" element={<AddPatientForm />} />
                         <Route path="/update/:id" element={<UpdatePatient />} />
                     </Routes>
                 </Container>
