@@ -23,11 +23,14 @@ const UpdatePatient = () => {
             const response = await getPatientDetails(id);
             if (response.data.success) {
                 const patientData = response.data.data;
-
+                // Check if secondaryAddress is null and provide default values if it is
                 if (!patientData.secondaryAddress) {
                     patientData.secondaryAddress = { street: '', city: '', state: '', zipCode: '', country: '' };
                 }
-                
+                // Convert dateOfBirth to yyyy-MM-dd format
+                if (patientData.dateOfBirth) {
+                    patientData.dateOfBirth = new Date(patientData.dateOfBirth).toISOString().split('T')[0];
+                }
                 setPatient(patientData);
             }
         };
