@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Container, TextField, Button, Box, Typography, MenuItem, IconButton, Paper, Grid } from '@mui/material';
+import { Container, TextField, Button, Box, Typography, MenuItem, IconButton, Paper, Grid, Divider } from '@mui/material';
 import { getPatientDetails, updatePatient } from '../services/api';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { validateContactInfo } from '../helpers/validators';
 
 const UpdatePatient = () => {
     const navigate = useNavigate();
@@ -19,6 +20,8 @@ const UpdatePatient = () => {
         primaryAddress: { street: '', city: '', state: '', zipCode: '', country: '' },
         secondaryAddress: { street: '', city: '', state: '', zipCode: '', country: '' }
     });
+
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         const fetchPatientDetails = async () => {
@@ -57,6 +60,8 @@ const UpdatePatient = () => {
         const newContactInfos = patient.contactInfos.map((info, i) =>
             i === index ? { ...info, [field]: value } : info
         );
+        const error = validateContactInfo(newContactInfos[index].type, newContactInfos[index].value);
+        setErrors({ ...errors, [`contactInfos.${index}`]: error });
         setPatient({ ...patient, contactInfos: newContactInfos });
     };
 
@@ -70,6 +75,20 @@ const UpdatePatient = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        let formIsValid = true;
+        const newErrors = {};
+        patient.contactInfos.forEach((info, index) => {
+            const error = validateContactInfo(info.type, info.value);
+            if (error) {
+                formIsValid = false;
+                newErrors[`contactInfos.${index}`] = error;
+            }
+        });
+        setErrors(newErrors);
+        if (!formIsValid) {
+            toast.error("Please fix the errors before submitting.");
+            return;
+        }
         try {
             const response = await updatePatient(patient);
             if (response.data.success) {
@@ -94,7 +113,7 @@ const UpdatePatient = () => {
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left" >
+                            <Typography variant="h6" component="h2" gutterBottom align="left">
                                 Demographics
                             </Typography>
                         </Grid>
@@ -146,7 +165,7 @@ const UpdatePatient = () => {
                             />
                         </Grid>
                         <Grid item xs={12} sx={{ mt: 2 }}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{mb: 2}}>
+                            <Typography variant="h6" component="h2" gutterBottom align="left" sx={{ mb: 2 }}>
                                 Contact Information
                             </Typography>
                             {patient.contactInfos.map((info, index) => (
@@ -165,6 +184,8 @@ const UpdatePatient = () => {
                                         label="Value"
                                         value={info.value}
                                         onChange={(e) => handleContactInfoChange(index, 'value', e.target.value)}
+                                        error={!!errors[`contactInfos.${index}`]}
+                                        helperText={errors[`contactInfos.${index}`]}
                                         sx={{ mr: 1, flex: 2 }}
                                     />
                                     <IconButton onClick={() => removeContactInfo(index)} disabled={patient.contactInfos.length <= 1}>
@@ -172,12 +193,14 @@ const UpdatePatient = () => {
                                     </IconButton>
                                 </Box>
                             ))}
-                            <Button variant="contained" onClick={addContactInfo} startIcon={<AddIcon />} sx={{ mt: 1, alignSelf: 'flex-start' }}>
-                                Add Contact Info
-                            </Button>
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 1, mb: 2 }}>
+                                <Button variant="outlined" onClick={addContactInfo} startIcon={<AddIcon />}>
+                                    Add Contact Info
+                                </Button>
+                            </Box>
                         </Grid>
                         <Grid item xs={12}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left" >
+                            <Typography variant="h6" component="h2" gutterBottom align="left">
                                 Primary Address
                             </Typography>
                         </Grid>
@@ -232,7 +255,7 @@ const UpdatePatient = () => {
                             />
                         </Grid>
                         <Grid item xs={12} sx={{ mt: 2 }}>
-                            <Typography variant="h6" component="h2" gutterBottom align="left" >
+                            <Typography variant="h6" component="h2" gutterBottom align="left">
                                 Secondary Address
                             </Typography>
                         </Grid>
@@ -240,7 +263,7 @@ const UpdatePatient = () => {
                             <TextField
                                 label="Street"
                                 name="secondaryAddress.street"
-                                value={patient.secondaryAddress.street || ''}
+                                value={patient.secondaryAddress.street}
                                 onChange={handleInputChange}
                                 fullWidth
                             />
@@ -249,7 +272,7 @@ const UpdatePatient = () => {
                             <TextField
                                 label="City"
                                 name="secondaryAddress.city"
-                                value={patient.secondaryAddress.city || ''}
+                                value={patient.secondaryAddress.city}
                                 onChange={handleInputChange}
                                 fullWidth
                             />
@@ -258,7 +281,7 @@ const UpdatePatient = () => {
                             <TextField
                                 label="State"
                                 name="secondaryAddress.state"
-                                value={patient.secondaryAddress.state || ''}
+                                value={patient.secondaryAddress.state}
                                 onChange={handleInputChange}
                                 fullWidth
                             />
@@ -267,7 +290,7 @@ const UpdatePatient = () => {
                             <TextField
                                 label="Zip Code"
                                 name="secondaryAddress.zipCode"
-                                value={patient.secondaryAddress.zipCode || ''}
+                                value={patient.secondaryAddress.zipCode}
                                 onChange={handleInputChange}
                                 fullWidth
                             />
@@ -276,14 +299,20 @@ const UpdatePatient = () => {
                             <TextField
                                 label="Country"
                                 name="secondaryAddress.country"
-                                value={patient.secondaryAddress.country || ''}
+                                value={patient.secondaryAddress.country}
                                 onChange={handleInputChange}
                                 fullWidth
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ fontSize: 18, mt:2 }}>
+                            <Divider />
+                        </Grid>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                            <Button variant="contained" color="primary" type="submit">
                                 Update Patient
+                            </Button>
+                            <Button variant="contained" color="secondary" onClick={() => navigate('/patients')}>
+                                Cancel
                             </Button>
                         </Grid>
                     </Grid>

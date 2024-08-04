@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { validateContactInfo } from '../helpers/validators';
 
 const AddPatient = () => {
     const navigate = useNavigate();
@@ -18,6 +19,8 @@ const AddPatient = () => {
         primaryAddress: { street: '', city: '', state: '', zipCode: '', country: '' },
         secondaryAddress: { street: '', city: '', state: '', zipCode: '', country: '' }
     });
+
+    const [errors, setErrors] = useState({});
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -39,6 +42,8 @@ const AddPatient = () => {
         const newContactInfos = patient.contactInfos.map((info, i) =>
             i === index ? { ...info, [field]: value } : info
         );
+        const error = validateContactInfo(newContactInfos[index].type, newContactInfos[index].value);
+        setErrors({ ...errors, [`contactInfos.${index}`]: error });
         setPatient({ ...patient, contactInfos: newContactInfos });
     };
 
@@ -52,6 +57,20 @@ const AddPatient = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        let formIsValid = true;
+        const newErrors = {};
+        patient.contactInfos.forEach((info, index) => {
+            const error = validateContactInfo(info.type, info.value);
+            if (error) {
+                formIsValid = false;
+                newErrors[`contactInfos.${index}`] = error;
+            }
+        });
+        setErrors(newErrors);
+        if (!formIsValid) {
+            toast.error("Please fix the errors before submitting.");
+            return;
+        }
         try {
             const response = await addPatient(patient);
             if (response.data.success) {
@@ -66,7 +85,7 @@ const AddPatient = () => {
             toast.error("An error occurred while adding the patient");
         }
     };
-    
+
     return (
         <Container>
             <Typography variant="h4" component="h1" gutterBottom>
@@ -147,6 +166,8 @@ const AddPatient = () => {
                                         label="Value"
                                         value={info.value}
                                         onChange={(e) => handleContactInfoChange(index, 'value', e.target.value)}
+                                        error={!!errors[`contactInfos.${index}`]}
+                                        helperText={errors[`contactInfos.${index}`]}
                                         sx={{ mr: 1, flex: 2 }}
                                     />
                                     <IconButton onClick={() => removeContactInfo(index)} disabled={patient.contactInfos.length <= 1}>
@@ -154,9 +175,11 @@ const AddPatient = () => {
                                     </IconButton>
                                 </Box>
                             ))}
-                            <Button variant="contained"  onClick={addContactInfo} startIcon={<AddIcon />} sx={{ mt: 1, alignSelf: 'flex-start' }}>
-                                Add Contact Info
-                            </Button>
+                            <Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 1, mb: 2 }}>
+                                <Button variant="outlined" onClick={addContactInfo} startIcon={<AddIcon />}>
+                                    Add Contact Info
+                                </Button>
+                            </Box>
                         </Grid>
                         <Grid item xs={12}> 
                             <Typography variant="h6" component="h2" gutterBottom align="left">
@@ -264,13 +287,20 @@ const AddPatient = () => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ fontSize: 18, mt:2 }}>
+                            <Divider />
+                        </Grid>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                            <Button variant="contained" color="primary" type="submit">
                                 Add Patient
+                            </Button>
+                            <Button variant="contained" color="secondary" onClick={() => navigate('/patients')}>
+                                Cancel
                             </Button>
                         </Grid>
                     </Grid>
                 </form>
             </Paper>
+            <ToastContainer />
         </Container>
     );
 };
