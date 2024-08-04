@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Box, Paper, InputBase, Divider, IconButton, TablePagination, Alert, AlertTitle } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
+import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Box, Paper, InputBase, IconButton, TablePagination, Alert } from '@mui/material';
 import { searchPatients, deactivatePatient } from '../services/api';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,6 +15,7 @@ const PatientList = () => {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalPatients, setTotalPatients] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPatients = async () => {
@@ -36,7 +37,7 @@ const PatientList = () => {
     };
 
     const handlePageChange = (event, newPage) => {
-        setPage(newPage + 1); 
+        setPage(newPage + 1);
     };
 
     const handlePageSizeChange = (event) => {
@@ -65,7 +66,7 @@ const PatientList = () => {
                         <SearchIcon />
                     </IconButton>
                 </Paper>
-                <Button variant="contained" color="primary" component={Link} to="/add">
+                <Button variant="contained" color="primary" onClick={() => navigate('/add-patient')}>
                     Add Patient
                 </Button>
             </Box>
@@ -127,7 +128,8 @@ const PatientList = () => {
                                             <IconButton
                                                 color="primary"
                                                 component={Link}
-                                                to={`/update/${patient.id}`}
+                                                // to={`/update/${patient.id}`}
+                                                to={`/add`}
                                                 sx={{ mr: 1 }}
                                             >
                                                 <EditIcon />
