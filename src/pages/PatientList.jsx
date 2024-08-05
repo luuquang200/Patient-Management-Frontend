@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Box, Paper, InputBase, IconButton, TablePagination, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Box, Paper, InputBase, IconButton, TablePagination, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, TableContainer } from '@mui/material';
 import { searchPatients, deactivatePatient } from '../services/api';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
@@ -78,7 +78,7 @@ const PatientList = () => {
     };
 
     return (
-        <Container>
+        <Paper sx={{ width: '100%', overflow: 'hidden', p: 2 }}>
             <Typography variant="h4" component="h1" gutterBottom>
                 Patient List
             </Typography>
@@ -108,82 +108,85 @@ const PatientList = () => {
                 </Alert>
             ) : (
                 <>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>First Name</TableCell>
-                                <TableCell>Last Name</TableCell>
-                                <TableCell>Gender</TableCell>
-                                <TableCell>Date of Birth</TableCell>
-                                <TableCell>Contact Info</TableCell>
-                                <TableCell>Primary Address</TableCell>
-                                <TableCell>Secondary Address</TableCell>
-                                <TableCell>Active Status</TableCell>
-                                <TableCell>Actions</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {patients.map((patient) => (
-                                <TableRow key={patient.id}>
-                                    <TableCell>{patient.firstName}</TableCell>
-                                    <TableCell>{patient.lastName}</TableCell>
-                                    <TableCell>{patient.gender}</TableCell>
-                                    <TableCell>{format(new Date(patient.dateOfBirth), 'MM/dd/yyyy')}</TableCell>
-                                    <TableCell>
-                                        {patient.contactInfos.map((info, index) => (
-                                            <div key={index}>{info.type}: {info.value}</div>
-                                        ))}
-                                    </TableCell>
-                                    <TableCell>
-                                        {patient.primaryAddress && (
-                                            <div>
-                                                {patient.primaryAddress.street}, {patient.primaryAddress.city}, {patient.primaryAddress.state}, {patient.primaryAddress.zipCode}, {patient.primaryAddress.country}
-                                            </div>
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        {patient.secondaryAddress ? (
-                                            <div>
-                                                {[
-                                                    patient.secondaryAddress.street,
-                                                    patient.secondaryAddress.city,
-                                                    patient.secondaryAddress.state,
-                                                    patient.secondaryAddress.zipCode,
-                                                    patient.secondaryAddress.country
-                                                ].filter(Boolean).join(', ') || 'N/A'}
-                                            </div>
-                                        ) : 'N/A'}
-                                    </TableCell>
-                                    <TableCell>
-                                        {patient.isActive ? (
-                                            <CheckCircleIcon color="success" />
-                                        ) : (
-                                            <CancelIcon color="error" />
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                            <IconButton
-                                                color="primary"
-                                                component={Link}
-                                                to={`/update/${patient.id}`}
-                                                sx={{ mr: 1 }}
-                                            >
-                                                <EditIcon />
-                                            </IconButton>
-                                            <IconButton
-                                                color="secondary"
-                                                onClick={() => handleOpen(patient.id)}
-                                                disabled={!patient.isActive}
-                                            >
-                                                <PersonOffIcon />
-                                            </IconButton>
-                                        </Box>
-                                    </TableCell>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>First Name</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Last Name</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Gender</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Date of Birth</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Contact Info</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Primary Address</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Secondary Address</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Active Status</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                            </TableHead>
+                            <TableBody>
+                                {patients.map((patient) => (
+                                    <TableRow key={patient.id}>
+                                        <TableCell>{patient.firstName}</TableCell>
+                                        <TableCell>{patient.lastName}</TableCell>
+                                        <TableCell>{patient.gender}</TableCell>
+                                        <TableCell>{format(new Date(patient.dateOfBirth), 'MM/dd/yyyy')}</TableCell>
+                                        <TableCell>
+                                            {patient.contactInfos.map((info, index) => (
+                                                <div key={index}>{info.type}: {info.value}</div>
+                                            ))}
+                                        </TableCell>
+                                        <TableCell>
+                                            {patient.primaryAddress && (
+                                                <div>
+                                                    {patient.primaryAddress.street}, {patient.primaryAddress.city}, {patient.primaryAddress.state}, {patient.primaryAddress.zipCode}, {patient.primaryAddress.country}
+                                                </div>
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            {patient.secondaryAddress ? (
+                                                <div>
+                                                    {[
+                                                        patient.secondaryAddress.street,
+                                                        patient.secondaryAddress.city,
+                                                        patient.secondaryAddress.state,
+                                                        patient.secondaryAddress.zipCode,
+                                                        patient.secondaryAddress.country
+                                                    ].filter(Boolean).join(', ') || 'N/A'}
+                                                </div>
+                                            ) : 'N/A'}
+                                        </TableCell>
+                                        <TableCell>
+                                            {patient.isActive ? (
+                                                <CheckCircleIcon color="success" />
+                                            ) : (
+                                                <CancelIcon color="error" />
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                <IconButton
+                                                    color="primary"
+                                                    component={Link}
+                                                    to={`/update/${patient.id}`}
+                                                    sx={{ mr: 1 }}
+                                                    disabled={!patient.isActive}
+                                                >
+                                                    <EditIcon />
+                                                </IconButton>
+                                                <IconButton
+                                                    color="secondary"
+                                                    onClick={() => handleOpen(patient.id)}
+                                                    disabled={!patient.isActive}
+                                                >
+                                                    <PersonOffIcon />
+                                                </IconButton>
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                     <TablePagination
                         component="div"
                         count={totalPatients}
@@ -191,7 +194,7 @@ const PatientList = () => {
                         onPageChange={handlePageChange}
                         rowsPerPage={pageSize}
                         onRowsPerPageChange={handlePageSizeChange}
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={[2, 10, 25]}
                     />
                 </>
             )}
@@ -224,7 +227,7 @@ const PatientList = () => {
             </Dialog>
 
             <ToastContainer />
-        </Container>
+        </Paper>
     );
 };
 
