@@ -100,7 +100,11 @@ const UpdatePatient = () => {
                 toast.error(response.data.message);
             }
         } catch (error) {
-            toast.error("An error occurred while updating the patient");
+            if (error.response && error.response.data) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("An error occurred while updating the patient");
+            }
         }
     };
 
