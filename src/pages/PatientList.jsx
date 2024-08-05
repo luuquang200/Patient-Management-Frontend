@@ -191,7 +191,7 @@ const PatientList = () => {
                         onPageChange={handlePageChange}
                         rowsPerPage={pageSize}
                         onRowsPerPageChange={handlePageSizeChange}
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={[2, 10, 25]}
                     />
                 </>
             )}
