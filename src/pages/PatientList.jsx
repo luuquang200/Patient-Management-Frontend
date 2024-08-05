@@ -39,7 +39,6 @@ const PatientList = () => {
             const response = await deactivatePatient(selectedPatientId, deactivateReason);
             if (response.data.success) {
                 toast.success("Patient deactivated successfully");
-                // Cập nhật lại danh sách bệnh nhân sau khi deactive
                 const updatedPatients = patients.map(patient =>
                     patient.id === selectedPatientId ? { ...patient, isActive: false } : patient
                 );
@@ -175,6 +174,7 @@ const PatientList = () => {
                                             <IconButton
                                                 color="secondary"
                                                 onClick={() => handleOpen(patient.id)}
+                                                disabled={!patient.isActive}
                                             >
                                                 <PersonOffIcon />
                                             </IconButton>
