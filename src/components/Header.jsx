@@ -2,14 +2,12 @@ import React from 'react';
 import { AppBar, Box, Button, Divider, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import MenuIcon from '@mui/icons-material/Menu';
-import YouTubeIcon from '@mui/icons-material/YouTube'; 
 import Logo from '../assets/logo.svg';
 
 const Header = () => {
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" color="transparent" elevation={1}>
+            <AppBar position="static" color="transparent" elevation={1} sx={{ boxShadow: 3 }}>
                 <Toolbar sx={{ justifyContent: 'space-between' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <img src={Logo} alt="Logo" style={{ height: '50px', marginRight: '16px' }} />

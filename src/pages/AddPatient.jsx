@@ -15,7 +15,7 @@ const AddPatient = () => {
         lastName: '',
         gender: '',
         dateOfBirth: '',
-        contactInfos: [{ type: '', value: '' }],
+        contactInfos: [{ type: 'Phone', value: '' }],
         primaryAddress: { street: '', city: '', state: '', zipCode: '', country: '' },
         secondaryAddress: { street: '', city: '', state: '', zipCode: '', country: '' }
     });
@@ -48,7 +48,7 @@ const AddPatient = () => {
     };
 
     const addContactInfo = () => {
-        setPatient({ ...patient, contactInfos: [...patient.contactInfos, { type: '', value: '' }] });
+        setPatient({ ...patient, contactInfos: [...patient.contactInfos, { type: 'Phone', value: '' }] });
     };
 
     const removeContactInfo = (index) => {

@@ -66,7 +66,7 @@ const UpdatePatient = () => {
     };
 
     const addContactInfo = () => {
-        setPatient({ ...patient, contactInfos: [...patient.contactInfos, { type: '', value: '' }] });
+        setPatient({ ...patient, contactInfos: [...patient.contactInfos, { type: 'Phone', value: '' }] });
     };
 
     const removeContactInfo = (index) => {
