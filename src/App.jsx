@@ -25,7 +25,7 @@ const App = () => {
             <Router>
                 <CssBaseline />
                 <Header />
-                <Container sx={{ mt: 4, mb: 4, maxWidth: '100%', minHeight: 800 }}>
+                <Container sx={{ mt: 4, mb: 4, maxWidth: '100%', minHeight: 800}}>
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/patients" element={<PatientList />} />

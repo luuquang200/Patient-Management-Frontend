@@ -33,6 +33,7 @@ const PatientList = () => {
 
     const handleDeactivate = async () => {
         if (!deactivateReason) {
+            toast.error("Please provide a reason for deactivating the patient");
             return;
         }
         try {
@@ -40,7 +41,7 @@ const PatientList = () => {
             if (response.data.success) {
                 toast.success("Patient deactivated successfully");
                 const updatedPatients = patients.map(patient =>
-                    patient.id === selectedPatientId ? { ...patient, isActive: false } : patient
+                    patient.id === selectedPatientId ? { ...patient, isActive: false, deactivateReason } : patient
                 );
                 setPatients(updatedPatients);
             } else {
@@ -50,7 +51,7 @@ const PatientList = () => {
             toast.error("An error occurred while deactivating the patient");
         }
         handleClose();
-    };
+    };    
 
     const handleOpen = (id) => {
         setSelectedPatientId(id);
@@ -109,21 +110,22 @@ const PatientList = () => {
             ) : (
                 <>
                     <TableContainer>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>First Name</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Last Name</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Gender</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Date of Birth</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Contact Info</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Primary Address</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Secondary Address</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Active Status</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>First Name</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Last Name</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Gender</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Date of Birth</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Contact Info</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Primary Address</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Secondary Address</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Active Status</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Deactivate Reason</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
                                 {patients.map((patient) => (
                                     <TableRow key={patient.id}>
                                         <TableCell>{patient.firstName}</TableCell>
@@ -163,6 +165,9 @@ const PatientList = () => {
                                             )}
                                         </TableCell>
                                         <TableCell>
+                                            {patient.deactivateReason || 'N/A'}
+                                        </TableCell>
+                                        <TableCell>
                                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                 <IconButton
                                                     color="primary"
@@ -198,7 +203,6 @@ const PatientList = () => {
                     />
                 </>
             )}
-
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Deactivate Patient</DialogTitle>
                 <DialogContent>
