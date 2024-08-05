@@ -14,8 +14,11 @@ export const updatePatient = (patientData) => {
         }
     });
 };
-export const deactivatePatient = (id, reason) => axios.patch(`${API_BASE_URL}/patients/${id}/deactivate`, {
-    reason
+export const deactivatePatient = (id, reason) => axios.delete(`${API_BASE_URL}/patients/deactivate/${id}`, {
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    data: JSON.stringify(reason),
 });
 export const searchPatients = ({ searchTerm, page, pageSize }) =>
     axios.get(`${API_BASE_URL}/patients/search`, {
