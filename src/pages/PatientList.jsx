@@ -90,7 +90,7 @@ const PatientList = () => {
                 >
                     <InputBase
                         sx={{ ml: 1, flex: 1 }}
-                        placeholder="Search Patients"
+                        placeholder="Search by first name, last name, date of birth or contact info"
                         inputProps={{ 'aria-label': 'search patients' }}
                         value={searchTerm}
                         onChange={handleSearchChange}
@@ -165,7 +165,7 @@ const PatientList = () => {
                                             )}
                                         </TableCell>
                                         <TableCell>
-                                            {patient.deactivateReason || 'N/A'}
+                                            {patient.inactiveReason || 'N/A'}
                                         </TableCell>
                                         <TableCell>
                                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
