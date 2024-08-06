@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Box, Paper, InputBase, IconButton, TablePagination, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, TableContainer } from '@mui/material';
+import { Container, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography, Box, Paper, InputBase, IconButton, TablePagination, Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, TableContainer } from '@mui/material';
 import { searchPatients, deactivatePatient } from '../services/api';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const PatientList = () => {
     const [patients, setPatients] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -27,9 +28,21 @@ const PatientList = () => {
             const response = await searchPatients({ searchTerm, page, pageSize });
             setPatients(response.data.data.items);
             setTotalPatients(response.data.data.totalCount);
+            setLoading(false); 
         };
         fetchPatients();
     }, [searchTerm, page, pageSize]);
+
+    if (loading) {
+        return (
+          <Container sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <CircularProgress />
+            <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 2 }}>
+              Loading...
+            </Typography>
+          </Container>
+        );
+    }
 
     const handleDeactivate = async () => {
         if (!deactivateReason) {
