@@ -9,7 +9,6 @@ import Home from './pages/Home';
 import PatientList from './pages/PatientList';
 import AddPatient from './pages/AddPatient';
 import UpdatePatient from './pages/UpdatePatient';
-import AddPatientForm from './components/AddPatientForm';
 
 import './App.css'; 
 
@@ -26,12 +25,12 @@ const App = () => {
             <Router>
                 <CssBaseline />
                 <Header />
-                <Container sx={{ mt: 4, mb: 4, maxWidth: '100%', minHeight: 800 }}>
+                <Container sx={{ mt: 4, mb: 4, maxWidth: '100%', minHeight: 800}}>
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/patients" element={<PatientList />} />
                         <Route path="/add" element={<AddPatient />} />
-                        <Route path="/add-patient" element={<AddPatientForm />} />
+                        <Route path="/add-patient" element={<AddPatient />} />
                         <Route path="/update/:id" element={<UpdatePatient />} />
                     </Routes>
                 </Container>

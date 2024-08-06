@@ -2,18 +2,15 @@ import React from 'react';
 import { AppBar, Box, Button, Divider, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import MenuIcon from '@mui/icons-material/Menu';
-import YouTubeIcon from '@mui/icons-material/YouTube'; 
+import Logo from '../assets/logo.svg';
 
 const Header = () => {
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" color="transparent" elevation={1}>
+            <AppBar position="static" color="transparent" elevation={1} sx={{ boxShadow: 3 }}>
                 <Toolbar sx={{ justifyContent: 'space-between' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <IconButton size="large" edge="start" color="primary" aria-label="menu" sx={{ mr: 2 }}>
-                            <MenuIcon />
-                        </IconButton>
+                        <img src={Logo} alt="Logo" style={{ height: '50px', marginRight: '16px' }} />
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             Patient Management
                         </Typography>
@@ -29,11 +26,6 @@ const Header = () => {
                         <Tooltip title="GitHub repository" arrow>
                             <IconButton color="primary" size="large" component="a" href="https://github.com/luuquang200/Patient-Management-Frontend" target="_blank" sx={{ mr: 2 }}>
                                 <GitHubIcon />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="YouTube demo" arrow>
-                            <IconButton color="secondary" size="large" component="a" href="#" target="_blank" sx={{ mr: 2 }}>
-                                <YouTubeIcon />
                             </IconButton>
                         </Tooltip>
                     </Box>
