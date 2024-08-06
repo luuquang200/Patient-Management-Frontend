@@ -77,6 +77,8 @@ const UpdatePatient = () => {
         e.preventDefault();
         let formIsValid = true;
         const newErrors = {};
+        
+        // Validate contact info
         patient.contactInfos.forEach((info, index) => {
             const error = validateContactInfo(info.type, info.value);
             if (error) {
@@ -84,11 +86,20 @@ const UpdatePatient = () => {
                 newErrors[`contactInfos.${index}`] = error;
             }
         });
+
+        // Validate date of birth
+        const today = new Date().toISOString().split('T')[0];
+        if (patient.dateOfBirth > today) {
+            formIsValid = false;
+            newErrors.dateOfBirth = "Date of birth cannot be in the future.";
+        }
+
         setErrors(newErrors);
         if (!formIsValid) {
             toast.error("Please fix the errors before submitting.");
             return;
         }
+
         try {
             const response = await updatePatient(patient);
             if (response.data.success) {
@@ -166,6 +177,8 @@ const UpdatePatient = () => {
                                 InputLabelProps={{ shrink: true }}
                                 fullWidth
                                 required
+                                error={!!errors.dateOfBirth}
+                                helperText={errors.dateOfBirth}
                             />
                         </Grid>
                         <Grid item xs={12} sx={{ mt: 2 }}>
