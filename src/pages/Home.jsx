@@ -11,7 +11,7 @@ const Home = () => {
         <Container sx={{mt: 20}}>
             <Box sx={{ my: 4, textAlign: 'center' }}>
                 <Typography variant="h3" component="h1" gutterBottom>
-                    Welcome to Patient Management System
+                    Welcome to Patient Management System SSS
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                     This system allows you to manage patient records efficiently and effectively.
