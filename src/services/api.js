@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://patient-service-otwul2bnna-uc.a.run.app/api';
+const API_BASE_URL = 'https://patient-service-661424623133.us-central1.run.app/api';
 // const API_BASE_URL = 'http://localhost:8082/api';
 
 export const getPatients = () => axios.get(`${API_BASE_URL}/patients`);
